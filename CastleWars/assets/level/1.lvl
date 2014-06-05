@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level width="8000" height="1200">	
+
+		<parameter value="3" name="shots"/>
+		<parameter value="1" name="par3"/>
+		<parameter value="2" name="par2"/>
+		<parameter value="200" name="goal"/>
+
+		<entity x="1" y="100" type="platform" />
+		<entity x="200" y="100" type="platform"/>
+		<entity x="400" y="100" type="platform"/>
+		<entity x="600" y="100" type="platform"/>
+		<entity x="800" y="100" type="platform"/>
+		<entity x="1000" y="100" type="platform"/>
+		<entity x="1200" y="100" type="platform"/>
+		<entity x="1400" y="100" type="platform"/>
+		<entity x="1600" y="100" type="platform"/>
+		<entity x="1800" y="100" type="platform"/>
+		<entity x="100" y="100" type="platform"/>
+		<entity x="300" y="100" type="platform"/>
+		<entity x="500" y="100" type="platform"/>
+		<entity x="700" y="100" type="platform"/>
+		<entity x="900" y="100" type="platform"/>
+		<entity x="1100" y="100" type="platform"/>
+		<entity x="1300" y="100" type="platform"/>
+		<entity x="1500" y="100" type="platform"/>
+		<entity x="1700" y="100" type="platform"/>
+		
+
+
+		<entity x="730" y="130" type="obstacle"/>
+		<entity x="730" y="160" type="obstacle"/>
+		<entity x="760" y="130" type="obstacle"/>
+		<entity x="760" y="160" type="obstacle"/>
+		<entity x="790" y="130" type="obstacle"/>
+		<entity x="790" y="160" type="obstacle"/>
+		<entity x="760" y="190" type="target"/>
+		
+		
+	  	<entity x="0"   y="0" type="projectile"/>
+		<entity x="60"   y="140" type="player"/>
+	
+</level>
