@@ -1,7 +1,9 @@
 package com.lucasfreegames.castlewars.manager;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.andengine.engine.Engine;
-import org.andengine.engine.camera.BoundCamera;
 import org.andengine.engine.camera.SmoothCamera;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
@@ -17,8 +19,12 @@ import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.graphics.Color;
+import android.widget.Toast;
 
 import com.lucasfreegames.castlewars.GameActivity;
 
@@ -233,4 +239,5 @@ public class ResourcesManager
 	{
 		return INSTANCE;
 	}
+	
 }

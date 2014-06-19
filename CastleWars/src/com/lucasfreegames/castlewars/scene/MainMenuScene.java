@@ -2,13 +2,11 @@ package com.lucasfreegames.castlewars.scene;
 
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.camera.hud.HUD;
-import org.andengine.engine.camera.hud.controls.BaseOnScreenControl.IOnScreenControlListener;
 import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
 import org.andengine.entity.scene.menu.item.IMenuItem;
-import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.input.touch.TouchEvent;
@@ -16,13 +14,16 @@ import org.andengine.input.touch.detector.ScrollDetector;
 import org.andengine.input.touch.detector.ScrollDetector.IScrollDetectorListener;
 import org.andengine.input.touch.detector.SurfaceScrollDetector;
 import org.andengine.opengl.util.GLState;
-import org.andengine.util.debug.Debug;
 
+import android.database.Cursor;
 
 import com.lucasfreegames.castlewars.BaseScene;
 import com.lucasfreegames.castlewars.extras.CustomMenuItem;
+import com.lucasfreegames.castlewars.manager.ResourcesManager;
 import com.lucasfreegames.castlewars.manager.SceneManager;
 import com.lucasfreegames.castlewars.manager.SceneManager.SceneType;
+import com.lucasfreegames.castlewars.persistency.LevelContract;
+import com.lucasfreegames.castlewars.persistency.LevelHelper;
 
 public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener, IScrollDetectorListener, IOnSceneTouchListener
 {
@@ -117,9 +118,10 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	private void createMenuChildScene()
 	{
 		menuChildScene = new MenuScene(camera);
-		for (int i=1; i<=resourcesManager.getNumberOfLevels(); i++){
-			//menuChildScene.addMenuItem(new ScaleMenuItemDecorator(new SpriteMenuItem(i, resourcesManager.menu_level_region, vbom), 1.2f, 1));
-			menuChildScene.addMenuItem(new ScaleMenuItemDecorator(new CustomMenuItem(i, resourcesManager.menu_level_region, vbom, ""+i), 1.2f, 1));
+		LevelHelper dbHelper = new LevelHelper(ResourcesManager.getInstance().activity);
+		Cursor c= dbHelper.getLevels();
+		while(c.moveToNext()){
+			menuChildScene.addMenuItem(new ScaleMenuItemDecorator(new CustomMenuItem(c.getInt(c.getColumnIndex(LevelContract.LevelEntry.COLUMN_NAME_LEVEL_ID)), resourcesManager.menu_level_region, vbom, c.getString(c.getColumnIndex(LevelContract.LevelEntry.COLUMN_NAME_LEVEL_ID))), 1.2f, 1));
 		}
 		menuChildScene.buildAnimations();
 		menuChildScene.setOnMenuItemClickListener(this);
