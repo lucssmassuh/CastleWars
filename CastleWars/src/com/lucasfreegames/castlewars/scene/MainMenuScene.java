@@ -121,7 +121,11 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		LevelHelper dbHelper = new LevelHelper(ResourcesManager.getInstance().activity);
 		Cursor c= dbHelper.getLevels();
 		while(c.moveToNext()){
-			menuChildScene.addMenuItem(new ScaleMenuItemDecorator(new CustomMenuItem(c.getInt(c.getColumnIndex(LevelContract.LevelEntry.COLUMN_NAME_LEVEL_ID)), resourcesManager.menu_level_region, vbom, c.getString(c.getColumnIndex(LevelContract.LevelEntry.COLUMN_NAME_LEVEL_ID))), 1.2f, 1));
+			menuChildScene.addMenuItem(new ScaleMenuItemDecorator(new CustomMenuItem(
+					c.getInt(c.getColumnIndex(LevelContract.LevelEntry.COLUMN_NAME_LEVEL_ID)), 
+					resourcesManager.menu_level_region, 
+					vbom, 
+					c.getString(c.getColumnIndex(LevelContract.LevelEntry.COLUMN_NAME_LEVEL_ID))), 1.2f, 1));
 		}
 		menuChildScene.buildAnimations();
 		menuChildScene.setOnMenuItemClickListener(this);

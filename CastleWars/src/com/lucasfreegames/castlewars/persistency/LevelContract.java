@@ -1,5 +1,7 @@
 package com.lucasfreegames.castlewars.persistency;
 
+import org.andengine.util.debug.Debug;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,32 +25,36 @@ public final class LevelContract {
 
 		private static final String TEXT_TYPE = " TEXT";
 		private static final String COMMA_SEP = ",";
-		public static final String SQL_CREATE_ENTRIES = "CREATE TABLE IF NOT EXISTS"
+		public static final String SQL_CREATE_ENTRIES = "CREATE TABLE IF NOT EXISTS "
 				+ LevelEntry.TABLE_NAME + " (" + LevelEntry._ID
 				+ " INTEGER PRIMARY KEY," + LevelEntry.COLUMN_NAME_LEVEL_ID
 				+ TEXT_TYPE + COMMA_SEP + LevelEntry.COLUMN_NAME_LEVEL_PROGRESS
 				+ TEXT_TYPE + COMMA_SEP + LevelEntry.COLUMN_NAME_LEVEL_STARS
-				+ TEXT_TYPE + COMMA_SEP + LevelEntry.COLUMN_NAME_LEVEL_LOCK
-				+ TEXT_TYPE + COMMA_SEP + " )";
+				+ TEXT_TYPE + COMMA_SEP + LevelEntry.COLUMN_NAME_LEVEL_LOCK + TEXT_TYPE
+				+ " )";
 		public static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS "
 				+ LevelEntry.TABLE_NAME;
 	}
-	
-    public static void initLevelsDatabase() {
-    	LevelHelper dbHelper = new LevelHelper(ResourcesManager.getInstance().activity);
-    	SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-    	for (int i=1; i>=ResourcesManager.getInstance().getNumberOfLevels();i++ )
+	
+	public static void createLevelsDatabase(SQLiteDatabase db){
+		db.execSQL(LevelEntry.SQL_CREATE_ENTRIES);
+	}
+	
+    public static void initLevelsDatabase(SQLiteDatabase db) {
+    	Debug.e("Levels: "+ ResourcesManager.getInstance().getNumberOfLevels());
+    	for (int i=1; i<=ResourcesManager.getInstance().getNumberOfLevels();i++ )
     	{// Create a new map of values, where column names are the keys
-    	ContentValues values = new ContentValues();
+       	ContentValues values = new ContentValues();
+       	values.put(LevelEntry._ID, i);
     	values.put(LevelEntry.COLUMN_NAME_LEVEL_ID, i+"");
     	values.put(LevelEntry.COLUMN_NAME_LEVEL_PROGRESS, "none");
     	values.put(LevelEntry.COLUMN_NAME_LEVEL_STARS, "0");
     	values.put(LevelEntry.COLUMN_NAME_LEVEL_LOCK, "locked");
     	// Insert the new row, returning the primary key value of the new row, not captured as of now
-    	db.insert(
+    	long id= db.insert(
     			LevelEntry.TABLE_NAME,
-    			null,
+    			LevelEntry.COLUMN_NAME_LEVEL_ID,
     	         values);
     	}
 	}
@@ -78,7 +84,6 @@ public final class LevelContract {
 		    null,                                     // don't filter by row groups
 		    sortOrder                                 // The sort order
 		    );
-		
 		return c;
 		
 	}
