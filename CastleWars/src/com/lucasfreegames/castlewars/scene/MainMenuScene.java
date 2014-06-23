@@ -14,8 +14,11 @@ import org.andengine.input.touch.detector.ScrollDetector;
 import org.andengine.input.touch.detector.ScrollDetector.IScrollDetectorListener;
 import org.andengine.input.touch.detector.SurfaceScrollDetector;
 import org.andengine.opengl.util.GLState;
+import org.andengine.util.debug.Debug;
 
 import android.database.Cursor;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.lucasfreegames.castlewars.BaseScene;
 import com.lucasfreegames.castlewars.extras.CustomMenuItem;
@@ -35,8 +38,9 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	private MenuScene menuChildScene;
 	private HUD menuHUD;
 	private SurfaceScrollDetector mScrollDetector;
-	private static float menuOffsetX=-250;
-	private static float menuOffsetY=-50;
+	private int higestLevel;
+	private static final float  menuOffsetX=-250;
+	private static final float menuOffsetY=-50;
 	private static float menuLeftLimit;
 	private static float menuWidth;
 	private static float menuRightLimit=menuOffsetX;
@@ -88,10 +92,16 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	}
 	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY)
 	{
-			GameScene.currentLevel=  pMenuItem.getID();
-			launchGame();
+			if( canPlayLevel(pMenuItem.getID())){
+				GameScene.currentLevel=  pMenuItem.getID();
+				launchGame();
+			}
 			return true;
 	}
+	
+	public boolean canPlayLevel(int level){
+		return (level<=higestLevel);
+	};
 	
 	public void launchGame(){
 		SceneManager.getInstance().loadGameScene(engine);
@@ -120,12 +130,23 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		menuChildScene = new MenuScene(camera);
 		LevelHelper dbHelper = new LevelHelper(ResourcesManager.getInstance().activity);
 		Cursor c= dbHelper.getLevels();
+		boolean isLevelUnlocked;
+		int currentLevel;
 		while(c.moveToNext()){
-			menuChildScene.addMenuItem(new ScaleMenuItemDecorator(new CustomMenuItem(
-					c.getInt(c.getColumnIndex(LevelContract.LevelEntry.COLUMN_NAME_LEVEL_ID)), 
-					resourcesManager.menu_level_region, 
-					vbom, 
-					c.getString(c.getColumnIndex(LevelContract.LevelEntry.COLUMN_NAME_LEVEL_ID))), 1.2f, 1));
+			isLevelUnlocked= c.getString(c.getColumnIndex(LevelContract.LevelEntry.COLUMN_NAME_LEVEL_LOCK)).equals(LevelContract.LevelEntry.VALUE_LEVEL_LOCK_UNLOCKED);
+			currentLevel=c.getInt(c.getColumnIndex(LevelContract.LevelEntry.COLUMN_NAME_LEVEL_ID));
+			menuChildScene.addMenuItem(
+						new ScaleMenuItemDecorator(
+								new CustomMenuItem(
+									currentLevel, 
+									resourcesManager.menu_level_region, 
+									vbom, 
+									currentLevel+"",
+									c.getInt(c.getColumnIndex(LevelContract.LevelEntry.COLUMN_NAME_LEVEL_STARS)),
+									isLevelUnlocked)
+							, 1.2f, 1) 
+						);
+			if(isLevelUnlocked)this.higestLevel= currentLevel;
 		}
 		menuChildScene.buildAnimations();
 		menuChildScene.setOnMenuItemClickListener(this);
@@ -133,8 +154,9 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		menuChildScene.setCamera(camera);
 		//Left limit shouldn't be less than the menu width minus the ofsset  
 		menuLeftLimit=-menuWidth-menuOffsetX;
-		menuChildScene.setPosition(menuOffsetX,-(menuChildScene.getChildCount()*100)+menuOffsetY);
+		menuChildScene.setPosition(menuOffsetX,-(menuChildScene.getChildCount()* menuChildScene.getChildByIndex(0).getHeight()/2.2f)+menuOffsetY);
 		setChildScene(menuChildScene);
+		//Debug.e( menuChildScene.getY() +"  "+ menuChildScene.getX()+ "  " + camera.getSurfaceWidth() ); 
 		}
 	
 	/**

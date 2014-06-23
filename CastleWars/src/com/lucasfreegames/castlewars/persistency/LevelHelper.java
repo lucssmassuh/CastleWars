@@ -16,12 +16,6 @@ public class LevelHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 		LevelContract.createLevelsDatabase(db);
 		LevelContract.initLevelsDatabase(db);
-
-/*    	if (!isDatabaseInitialized(db, LevelContract.LevelEntry.TABLE_NAME ))
-            {
-    			LevelContract.createLevelsDatabase();
-    			LevelContract.initLevelsDatabase();
-            }*/
     }
     
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -37,24 +31,6 @@ public class LevelHelper extends SQLiteOpenHelper {
     public Cursor getLevels(){
     	return LevelContract.loadLevelsOnCursor();
     }
-       
-    public boolean isDatabaseInitialized(SQLiteDatabase db, String tableName){
-    	{
-    	    if (tableName == null || db == null || !db.isOpen())
-    	    {
-    	        return false;
-    	    }
-    	    Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM sqlite_master WHERE type = ? AND name = ?", new String[] {"table", tableName});
-    	    if (!cursor.moveToFirst())
-    	    {
-    	        return false;
-    	    }
-    	    int count = cursor.getInt(0);
-    	    cursor.close();
-        	db.close();
-    	    return count > 0;
-    	}    
-    }
-    
+           
     
 }

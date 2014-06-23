@@ -19,12 +19,8 @@ import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.graphics.Color;
-import android.widget.Toast;
 
 import com.lucasfreegames.castlewars.GameActivity;
 
@@ -61,7 +57,7 @@ public class ResourcesManager
 	public ITextureRegion menu_next_region;
 	public ITextureRegion menu_replay_region;
 	public ITextureRegion menu_menu_region;
-	public ITextureRegion menu_level_region;
+	public ITiledTextureRegion menu_level_region;
 
 	
 	// Game Texture
@@ -107,8 +103,8 @@ public class ResourcesManager
         menu_background_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "frame.png");
         play_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "play.png");
         options_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "options.png");
-        menu_level_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "level.png");
-       
+        //menu_level_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "level.png");
+        menu_level_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(menuTextureAtlas, activity, "level.png", 5, 1);
     	try 
     	{
 			this.menuTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));

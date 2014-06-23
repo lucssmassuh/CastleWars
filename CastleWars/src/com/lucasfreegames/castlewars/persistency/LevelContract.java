@@ -10,18 +10,23 @@ import android.provider.BaseColumns;
 import com.lucasfreegames.castlewars.manager.ResourcesManager;
 
 public final class LevelContract {
+		public static final int LEVEL_COMPLETED_3STARS=0,LEVEL_COMPLETED_2STARS=1, LEVEL_COMPLETED_1STAR=2, LEVEL_UNLOCKED=3, LEVEL_LOCKED=4 ;  
+
 	public LevelContract() {
 	}
 
 	/* Inner class that defines the table contents */
 	public static abstract class LevelEntry implements BaseColumns {
+		
 		public static final String TABLE_NAME = "levels";
 		public static final String COLUMN_NAME_LEVEL_ID = "levelid";
-		public static final String COLUMN_NAME_LEVEL_PROGRESS = "progress";// completed
-																			// notcompleted
+		public static final String COLUMN_NAME_LEVEL_PROGRESS = "progress";
+			public static final String VALUE_LEVEL_PROGRESS_COMPLETED = "completed";
+			public static final String VALUE_LEVEL_PROGRESS_NOTCOMPLETED = "notcompleted";
 		public static final String COLUMN_NAME_LEVEL_STARS = "stars";
-		public static final String COLUMN_NAME_LEVEL_LOCK = "status";// Unlocked
-																		// Locked
+		public static final String COLUMN_NAME_LEVEL_LOCK = "status";
+		public static final String VALUE_LEVEL_LOCK_LOCKED = "locked";
+		public static final String VALUE_LEVEL_LOCK_UNLOCKED = "unlocked";
 
 		private static final String TEXT_TYPE = " TEXT";
 		private static final String COMMA_SEP = ",";
@@ -48,11 +53,15 @@ public final class LevelContract {
        	ContentValues values = new ContentValues();
        	values.put(LevelEntry._ID, i);
     	values.put(LevelEntry.COLUMN_NAME_LEVEL_ID, i+"");
-    	values.put(LevelEntry.COLUMN_NAME_LEVEL_PROGRESS, "none");
+    	values.put(LevelEntry.COLUMN_NAME_LEVEL_PROGRESS, LevelEntry.VALUE_LEVEL_PROGRESS_NOTCOMPLETED);
     	values.put(LevelEntry.COLUMN_NAME_LEVEL_STARS, "0");
-    	values.put(LevelEntry.COLUMN_NAME_LEVEL_LOCK, "locked");
+    	if( i==1){
+    		values.put(LevelEntry.COLUMN_NAME_LEVEL_LOCK, LevelEntry.VALUE_LEVEL_LOCK_UNLOCKED);
+    	}else{
+    		values.put(LevelEntry.COLUMN_NAME_LEVEL_LOCK, LevelEntry.VALUE_LEVEL_LOCK_LOCKED);
+    	}
     	// Insert the new row, returning the primary key value of the new row, not captured as of now
-    	long id= db.insert(
+    	db.insert(
     			LevelEntry.TABLE_NAME,
     			LevelEntry.COLUMN_NAME_LEVEL_ID,
     	         values);
