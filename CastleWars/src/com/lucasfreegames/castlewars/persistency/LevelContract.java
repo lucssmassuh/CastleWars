@@ -107,7 +107,7 @@ public final class LevelContract {
 		values.put(LevelEntry.COLUMN_NAME_LEVEL_PROGRESS, LevelEntry.VALUE_LEVEL_PROGRESS_COMPLETED);
 
 		// Which row to update, based on the ID
-		String selection = LevelEntry.COLUMN_NAME_LEVEL_ID+ " = ";
+		String selection = LevelEntry.COLUMN_NAME_LEVEL_ID+ " LIKE ?";
 		String[] selectionArgs = { String.valueOf(levelId) };
 
 		db.update(
@@ -125,7 +125,7 @@ public final class LevelContract {
 		values.put(LevelEntry.COLUMN_NAME_LEVEL_LOCK, LevelEntry.VALUE_LEVEL_LOCK_UNLOCKED);
 
 		// Which row to update, based on the ID
-		String selection = LevelEntry.COLUMN_NAME_LEVEL_ID+ " = ";
+		String selection = LevelEntry.COLUMN_NAME_LEVEL_ID+ " LIKE ?";
 		String[] selectionArgs = { String.valueOf(levelId) };
 
 		db.update(

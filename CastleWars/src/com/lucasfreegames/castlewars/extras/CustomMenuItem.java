@@ -43,6 +43,7 @@ public class CustomMenuItem extends AnimatedSpriteMenuItem{
 		if (newStarsRecord > this.starsRecord){
 			this.starsRecord = newStarsRecord;
 			updateTileForStars(newStarsRecord);
+			LevelContract.updateStarsRecord(Integer.parseInt(levelName.getText().toString()), newStarsRecord);
 			Debug.e("Updating Stars for  Level" + levelName + " to "+newStarsRecord);
 		}
 	}
@@ -51,7 +52,8 @@ public class CustomMenuItem extends AnimatedSpriteMenuItem{
 		this.enabled = true;
 		setCurrentTileIndex(LevelContract.LEVEL_UNLOCKED);
 		this.levelName.setVisible(true);
-		Debug.e("Enabling Level" + levelName);
+		Debug.e("Enabling Level" + Integer.parseInt(levelName.getText().toString()));
+		LevelContract.unlockLevel(Integer.parseInt(levelName.getText().toString()));
 		
 	}
 	
