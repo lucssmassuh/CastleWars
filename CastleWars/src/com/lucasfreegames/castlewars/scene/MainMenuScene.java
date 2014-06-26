@@ -1,5 +1,7 @@
 package com.lucasfreegames.castlewars.scene;
 
+import java.util.Currency;
+
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.scene.IOnSceneTouchListener;
@@ -35,10 +37,10 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	//---------------------------------------------
 	
 	private static final int MENU_ITEM_PADDING = 20;
-	private MenuScene menuChildScene;
+	private static MenuScene menuChildScene;
 	private HUD menuHUD;
 	private SurfaceScrollDetector mScrollDetector;
-	private int higestLevel;
+	private static int highestLevel;
 	private static final float  menuOffsetX=-250;
 	private static final float menuOffsetY=-50;
 	private static float menuLeftLimit;
@@ -100,7 +102,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	}
 	
 	public boolean canPlayLevel(int level){
-		return (level<=higestLevel);
+		return (level<=highestLevel);
 	};
 	
 	public void launchGame(){
@@ -136,7 +138,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			isLevelUnlocked= c.getString(c.getColumnIndex(LevelContract.LevelEntry.COLUMN_NAME_LEVEL_LOCK)).equals(LevelContract.LevelEntry.VALUE_LEVEL_LOCK_UNLOCKED);
 			currentLevel=c.getInt(c.getColumnIndex(LevelContract.LevelEntry.COLUMN_NAME_LEVEL_ID));
 			menuChildScene.addMenuItem(
-						new ScaleMenuItemDecorator(
+						//new ScaleMenuItemDecorator(
 								new CustomMenuItem(
 									currentLevel, 
 									resourcesManager.menu_level_region, 
@@ -144,9 +146,9 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 									currentLevel+"",
 									c.getInt(c.getColumnIndex(LevelContract.LevelEntry.COLUMN_NAME_LEVEL_STARS)),
 									isLevelUnlocked)
-							, 1.2f, 1) 
+						//	, 1.2f, 1) 
 						);
-			if(isLevelUnlocked)this.higestLevel= currentLevel;
+			if(isLevelUnlocked)this.highestLevel= currentLevel;
 		}
 		menuChildScene.buildAnimations();
 		menuChildScene.setOnMenuItemClickListener(this);
@@ -209,6 +211,20 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
 		this.mScrollDetector.onTouchEvent(pSceneTouchEvent);
 		return false;
+	}
+	
+	public static void handleLevelComplete(int completedLevelID, int newStarsRecord){
+		//adjust level id to index (-1)
+		CustomMenuItem levelCompleted = (CustomMenuItem)(menuChildScene.getMenuItem(completedLevelID-1));
+		//Unlock next level if completed level is the current highest level
+		if (completedLevelID==highestLevel){
+			//TODO verify if next level exists before
+			CustomMenuItem nextLevel= (CustomMenuItem)(menuChildScene.getMenuItem(completedLevelID));
+			nextLevel.enable();
+			highestLevel++;
+		}
+		//Update Stars record of completed level
+		levelCompleted.updateStars(newStarsRecord);
 	}
 	
 }

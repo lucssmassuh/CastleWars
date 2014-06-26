@@ -516,7 +516,21 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IOnMe
 			return StarsCount.ZERO;			
 		}
 	}
-	
+
+	public int getStarsCountInt(){
+		if (isGoalAccomplished()){
+			if(numberOfShootsFired<=levelPar3Stars){
+				return 3;		
+			}else if (numberOfShootsFired<=levelPar2Stars){
+				return 2;
+			}else {
+				return 1;
+			}
+		}else{
+			return 0;			
+		}
+	}
+
 	public void manageLevelEnding(){
 		if(levelEndDisplayed)return;
 		instructions="";
@@ -525,6 +539,10 @@ public class GameScene extends BaseScene implements IOnSceneTouchListener, IOnMe
 		displayText(levelCompleteWindow.getDisplayText(),camera.getCenterX(),camera.getCenterY()+120);
 		//Only show next button on levelEndMenu if goal was accomplished and it is not the last level
 		createMenuChildScene(!isLastLevel() && isGoalAccomplished());
+		if(isGoalAccomplished()){
+			MainMenuScene.handleLevelComplete(currentLevel, getStarsCountInt());
+		}
+		
 	}
 	
 	public void displayText(Text t, float x, float y){

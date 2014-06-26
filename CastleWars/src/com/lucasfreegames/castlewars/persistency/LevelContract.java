@@ -96,4 +96,43 @@ public final class LevelContract {
 		return c;
 		
 	}
+	
+	public static  void updateStarsRecord(int levelId, int newStarsRecord) {
+		LevelHelper dbHelper = new LevelHelper(ResourcesManager.getInstance().activity);
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+		// New value for one column
+		ContentValues values = new ContentValues();
+		values.put(LevelEntry.COLUMN_NAME_LEVEL_STARS, newStarsRecord);
+		values.put(LevelEntry.COLUMN_NAME_LEVEL_PROGRESS, LevelEntry.VALUE_LEVEL_PROGRESS_COMPLETED);
+
+		// Which row to update, based on the ID
+		String selection = LevelEntry.COLUMN_NAME_LEVEL_ID+ " = ";
+		String[] selectionArgs = { String.valueOf(levelId) };
+
+		db.update(
+		    LevelEntry.TABLE_NAME,
+		    values,
+		    selection,
+		    selectionArgs);		
+	}
+	public static  void unlockLevel(int levelId) {
+		LevelHelper dbHelper = new LevelHelper(ResourcesManager.getInstance().activity);
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+		// New value for one column
+		ContentValues values = new ContentValues();
+		values.put(LevelEntry.COLUMN_NAME_LEVEL_LOCK, LevelEntry.VALUE_LEVEL_LOCK_UNLOCKED);
+
+		// Which row to update, based on the ID
+		String selection = LevelEntry.COLUMN_NAME_LEVEL_ID+ " = ";
+		String[] selectionArgs = { String.valueOf(levelId) };
+
+		db.update(
+		    LevelEntry.TABLE_NAME,
+		    values,
+		    selection,
+		    selectionArgs);		
+	}
+
 }

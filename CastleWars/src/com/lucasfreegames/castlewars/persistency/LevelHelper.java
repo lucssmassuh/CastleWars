@@ -16,6 +16,7 @@ public class LevelHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 		LevelContract.createLevelsDatabase(db);
 		LevelContract.initLevelsDatabase(db);
+		db.close();
     }
     
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
